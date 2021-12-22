@@ -8,8 +8,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/castbox/StreamingKit/"
   s.license      = 'MIT'
   s.author       = { "LEE" => "xiang.li@castbox.fm" }
-  s.source       = { :git => "https://github.com/castbox
-/StreamingKit.git", :tag => s.version.to_s}
+  s.source       = { :git => "https://github.com/castbox/StreamingKit.git", :tag => s.version.to_s}
   s.requires_arc = true
   s.source_files = 'StreamingKit/StreamingKit/*.{h,m}'
   s.ios.frameworks   = 'SystemConfiguration', 'CFNetwork', 'CoreFoundation', 'AudioToolbox'
