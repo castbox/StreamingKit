@@ -589,9 +589,6 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
 
 -(void) destroyAudioResources
 {
-    if ((NSInteger)CFGetRetainCount((__bridge CFTypeRef)(self)) > 7) {
-        NSLog(@"泄漏了");
-    }
     if (currentlyReadingEntry)
     {
         currentlyReadingEntry.dataSource.delegate = nil;
