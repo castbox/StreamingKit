@@ -371,6 +371,22 @@
     }
     else if (self.httpStatusCode >= 300)
     {
+        if (self.httpStatusCode == 301 || self.httpStatusCode == 302) {
+            // 301 永久性转移(Permanently Moved)
+            // 302 暂时性转移(Temporarily Moved)
+            NSString* target = [httpHeaders objectForKey:@"Location"];
+            if (target) {
+                NSString* targetURLEncode = [target stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                [target stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+                NSURL* url = [NSURL URLWithString: targetURLEncode];
+                // 更改URL
+                self->asyncUrlProvider = ^(STKHTTPDataSource* dataSource, BOOL forSeek, STKURLBlock block)
+                {
+                    block(url);
+                };
+            }
+        }
+        
         [self errorOccured];
         
         return NO;

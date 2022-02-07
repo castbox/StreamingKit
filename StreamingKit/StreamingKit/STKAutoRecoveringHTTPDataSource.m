@@ -368,13 +368,18 @@ static void PopulateOptionsWithDefault(STKAutoRecoveringHTTPDataSourceOptions* o
 {
     NSLog(@"dataSourceErrorOccured");
     
-    if (self.innerDataSource.httpStatusCode == 416 /* Range out of bounds */)
-    {
-        [super dataSourceEof:dataSource];
-    }
-    else
-    {
-        [self processRetryOnError];
+    switch (self.innerDataSource.httpStatusCode) {
+        case 416: /* Range out of bounds */
+            [super dataSourceEof:dataSource];
+            break;
+            
+        case 400: /* Request error */
+            [super dataSourceErrorOccured:dataSource];
+            break;
+            
+        default:
+            [self processRetryOnError];
+            break;
     }
 }
 
