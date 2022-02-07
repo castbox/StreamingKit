@@ -375,15 +375,17 @@
             // 301 永久性转移(Permanently Moved)
             // 302 暂时性转移(Temporarily Moved)
             NSString* target = [httpHeaders objectForKey:@"Location"];
-            if (target) {
+            if (target && ![target isEqualToString:@""]) {
                 NSString* targetURLEncode = [target stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                 [target stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
                 NSURL* url = [NSURL URLWithString: targetURLEncode];
-                // 更改URL
-                self->asyncUrlProvider = ^(STKHTTPDataSource* dataSource, BOOL forSeek, STKURLBlock block)
-                {
-                    block(url);
-                };
+                if (url) {
+                    // 手动更改URL
+                    self->asyncUrlProvider = ^(STKHTTPDataSource* dataSource, BOOL forSeek, STKURLBlock block)
+                    {
+                        block(url);
+                    };
+                }
             }
         }
         
