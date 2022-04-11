@@ -330,6 +330,13 @@
     {
         self->supportsSeek = ![[httpHeaders objectForKey:@"Accept-Ranges"] isEqualToString:@"none"];
     }
+    else
+    {
+        // 不存在Accept-Ranges字段则直接抛出错误 上层进行降级处理
+        self->httpStatusCode = (UInt32)10001;
+        [self errorOccured];
+        return NO;
+    }
     
     if (self.httpStatusCode == 200)
     {

@@ -377,6 +377,10 @@ static void PopulateOptionsWithDefault(STKAutoRecoveringHTTPDataSourceOptions* o
             [super dataSourceErrorOccured:dataSource];
             break;
             
+        case 10001: /* 未找到Accept-Ranges字段 */
+            [super dataSourceErrorOccured:dataSource];
+            break;
+            
         default:
             [self processRetryOnError];
             break;
