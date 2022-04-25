@@ -1183,7 +1183,19 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
     STKQueueEntry* next = [bufferingQueue dequeue];
     
     [self processFinishPlayingIfAnyAndPlayingNext:entry withNext:next];
-    [self processRunloop];
+    
+    // 参考https://github.com/tumtumtum/StreamingKit/issues/453
+    // 防止在AURemoteIO::IOThread中调用AUGraphStop(audioGraph);出现崩溃.
+    __weak typeof(self) weakSelf = self;
+    
+    [self invokeOnPlaybackThread:^
+    {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        
+        if (!strongSelf) return;
+        
+        [strongSelf processRunloop];
+    }];
 }
 
 -(void) setCurrentlyReadingEntry:(STKQueueEntry*)entry andStartPlaying:(BOOL)startPlaying
