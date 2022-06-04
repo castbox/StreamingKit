@@ -1184,18 +1184,7 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
     
     [self processFinishPlayingIfAnyAndPlayingNext:entry withNext:next];
     
-    // 参考https://github.com/tumtumtum/StreamingKit/issues/453
-    // 防止在AURemoteIO::IOThread中调用AUGraphStop(audioGraph);出现崩溃.
-    __weak typeof(self) weakSelf = self;
-    
-    [self invokeOnPlaybackThread:^
-    {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        
-        if (!strongSelf) return;
-        
-        [strongSelf processRunloop];
-    }];
+    [self processRunloop];
 }
 
 -(void) setCurrentlyReadingEntry:(STKQueueEntry*)entry andStartPlaying:(BOOL)startPlaying
@@ -2593,6 +2582,19 @@ static BOOL GetHardwareCodecClassDesc(UInt32 formatId, AudioClassDescription* cl
         stopReason = stopReasonIn;
         self.internalState = STKAudioPlayerInternalStateStopped;
         
+        return;
+    }
+    
+    // 参考https://github.com/tumtumtum/StreamingKit/issues/453
+    // 防止在AURemoteIO::IOThread中调用AUGraphStop(audioGraph);出现崩溃.
+    if ([[NSThread currentThread].name isEqualToString:@"AURemoteIO::IOThread"]) {
+
+        [self resetPcmBuffers];
+
+        stopReason = stopReasonIn;
+
+        self.internalState = STKAudioPlayerInternalStateStopped;
+
         return;
     }
     
