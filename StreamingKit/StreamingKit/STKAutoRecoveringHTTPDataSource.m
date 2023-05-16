@@ -366,7 +366,7 @@ static void PopulateOptionsWithDefault(STKAutoRecoveringHTTPDataSourceOptions* o
 
 -(void) dataSourceErrorOccured:(STKDataSource*)dataSource
 {
-    NSLog(@"dataSourceErrorOccured");
+    NSLog(@"dataSourceErrorOccured %d", self.innerDataSource.httpStatusCode);
     
     switch (self.innerDataSource.httpStatusCode) {
         case 416: /* Range out of bounds */
@@ -378,6 +378,10 @@ static void PopulateOptionsWithDefault(STKAutoRecoveringHTTPDataSourceOptions* o
             break;
             
         case 10001: /* 未找到Accept-Ranges字段 */
+            [super dataSourceErrorOccured:dataSource];
+            break;
+        
+        case 0: /* 通常是来自kCFStreamEventErrorOccurred的异常 这里没法用其他方式区分 直接按照失败处理 */
             [super dataSourceErrorOccured:dataSource];
             break;
             
