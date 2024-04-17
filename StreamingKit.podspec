@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "StreamingKit"
-  s.version      = "16.2.0"
+  s.version      = "16.2.1"
   s.platform     = :ios
   s.ios.deployment_target = '5.0'
   s.osx.deployment_target = '10.7'
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   
   s.subspec 'Privacy' do |ss|
       ss.resource_bundles = {
-        "Privacy" => 'StreamingKit/Resources/PrivacyInfo.xcprivacy'
+          s.name => 'StreamingKit/Resources/PrivacyInfo.xcprivacy'
       }
   end
 end
