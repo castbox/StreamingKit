@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "StreamingKit"
-  s.version      = "16.2.1"
+  s.version      = "16.2.2"
   s.platform     = :ios
   s.ios.deployment_target = '5.0'
   s.osx.deployment_target = '10.7'

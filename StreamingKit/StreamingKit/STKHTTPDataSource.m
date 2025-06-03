@@ -328,7 +328,9 @@
 
     if (([httpHeaders objectForKey:@"Accept-Ranges"] ?: [httpHeaders objectForKey:@"accept-ranges"]) != nil)
     {
-        self->supportsSeek = ![[httpHeaders objectForKey:@"Accept-Ranges"] isEqualToString:@"none"];
+        self->supportsSeek = YES;
+        // 默认所有资源都支持Seek, 因为发现很多资源服务器会返回Accept-Ranges:none, 但是它们本质是支持的. 而且这个破播放器对于supportsSeek=NO的处理也很傻逼, 所以这里全部认为是YES
+        //self->supportsSeek = ![[httpHeaders objectForKey:@"Accept-Ranges"] isEqualToString:@"none"];
     }
     else
     {
